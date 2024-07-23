@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../services/category.service';
+import { Category } from '../models/category.model';
 
 @Component({
   selector: 'app-edit-category',
@@ -11,15 +12,12 @@ import { CategoryService } from '../services/category.service';
 export class EditCategoryComponent implements OnInit, OnDestroy {
   id: string | null = null;
   paramsSubscription?: Subscription;
+  category?: Category;
 
   constructor(
     private route: ActivatedRoute,
     private categoryService: CategoryService
   ) {}
-
-  ngOnDestroy(): void {
-    this.paramsSubscription?.unsubscribe();
-  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe({
@@ -27,9 +25,21 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
         this.id = params.get('id');
 
         if (this.id) {
-          this.categoryService.getCategoryById(this.id);
+          this.categoryService.getCategoryById(this.id).subscribe({
+            next: (response) => {
+              this.category = response;
+            },
+          });
         }
       },
     });
+  }
+
+  onFormSubmit(): void {
+    console.log(this.category);
+  }
+
+  ngOnDestroy(): void {
+    this.paramsSubscription?.unsubscribe();
   }
 }
