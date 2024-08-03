@@ -13,7 +13,7 @@ export class BlogPostService {
 
   createBlogPost(data: AddBlogPost): Observable<BlogPost> {
     return this.http.post<BlogPost>(
-      `${environment.apiBaseUrl}/api/blogposts`,
+      `${environment.apiBaseUrl}/api/BlogPost`,
       data
     );
   }
