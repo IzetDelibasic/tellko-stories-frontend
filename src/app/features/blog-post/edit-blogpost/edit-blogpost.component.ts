@@ -19,6 +19,7 @@ export class EditBlogpostComponent implements OnInit, OnDestroy {
   selectedCategories?: string[];
   routeSubscription?: Subscription;
   updateBlogPostSubscription?: Subscription;
+  getBlogPostSubscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,21 +37,22 @@ export class EditBlogpostComponent implements OnInit, OnDestroy {
 
         // Get BlogPost from API
         if (this.id) {
-          this.blogPostService.getBlogPostById(this.id).subscribe({
-            next: (response) => {
-              this.model = response;
-              this.selectedCategories = response.categories.map((x) => x.id);
-            },
-          });
+          this.getBlogPostSubscription = this.blogPostService
+            .getBlogPostById(this.id)
+            .subscribe({
+              next: (response) => {
+                this.model = response;
+                this.selectedCategories = response.categories.map((x) => x.id);
+              },
+            });
         }
       },
     });
   }
 
   onFormSubmit(): void {
-    // Converting DTO Model for Request Object
     if (this.model && this.id) {
-      var updateBlogPost: UpdateBlogPost = {
+      const updateBlogPost: UpdateBlogPost = {
         author: this.model.author,
         content: this.model.content,
         shortDescription: this.model.shortDescription,
@@ -61,18 +63,22 @@ export class EditBlogpostComponent implements OnInit, OnDestroy {
         urlHandle: this.model.urlHandle,
         categories: this.selectedCategories ?? [],
       };
-    }
 
-    this.updateBlogPostSubscription = this.blogPostService
-      .updateBlogPost(this.id, updateBlogPost)
-      .subscribe({
-        next: (response) => {
-          this.router.navigateByUrl('/admin/BlogPosts');
-        },
-      });
+      this.updateBlogPostSubscription = this.blogPostService
+        .updateBlogPost(this.id, updateBlogPost)
+        .subscribe({
+          next: () => {
+            this.router.navigateByUrl('/admin/blogposts');
+          },
+        });
+    } else {
+      console.error('Form submission failed due to missing model or ID.');
+    }
   }
 
   ngOnDestroy(): void {
     this.routeSubscription?.unsubscribe();
+    this.updateBlogPostSubscription?.unsubscribe();
+    this.getBlogPostSubscription?.unsubscribe();
   }
 }
