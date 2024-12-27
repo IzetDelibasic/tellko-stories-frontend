@@ -10,6 +10,10 @@ import { environment } from 'src/environments/environment';
 export class ImageSelectorService {
   constructor(private http: HttpClient) {}
 
+  getAllImages(): Observable<BlogImage[]> {
+    return this.http.get<BlogImage[]>(`${environment.apiBaseUrl}/api/Images`);
+  }
+
   uploadImage(
     file: File,
     fileName: string,
