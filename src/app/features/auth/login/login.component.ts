@@ -36,10 +36,16 @@ export class LoginComponent {
           true,
           'Strict'
         );
+
+        // Setting User
+        this.authService.setUser({
+          email: response.email,
+          roles: response.roles,
+        });
+
+        // Redirecting back to Home
+        this.router.navigateByUrl('/');
       },
     });
-
-    // Redirecting back to Home
-    this.router.navigateByUrl('/');
   }
 }
