@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from './services/auth.service';
-import { jwtDecode } from 'jwt-decode';
+import { AuthService } from '../services/auth.service';
+import jwt_decode from 'jwt-decode';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const cookieService = inject(CookieService);
@@ -15,7 +15,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   if (token) {
     token = token.replace('Bearer ', '');
-    const decodedToken: any = jwtDecode(token);
+    const decodedToken: any = jwt_decode(token);
 
     // Checking if token has expired
     const expirationDate = decodedToken.exp * 1000;
@@ -28,7 +28,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       });
     } else {
       // If token valid
-      if (user?.roles.indexOf('Writer')) {
+      if (user?.roles.includes('Writer')) {
         return true;
       } else {
         alert('Unauthorized');

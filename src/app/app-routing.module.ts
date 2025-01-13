@@ -9,7 +9,7 @@ import { EditBlogpostComponent } from './features/blog-post/edit-blogpost/edit-b
 import { HomeComponent } from './features/public/home/home.component';
 import { BlogDetailsComponent } from './features/public/blog-details/blog-details.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { authGuard } from './features/auth/auth.guard';
+import { authGuard } from './features/auth/guards/auth.guard';
 
 const routes: Routes = [
   {
